@@ -8,10 +8,10 @@ Author: Jeff Starr
 Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Contributors: specialk
-Requires at least: 4.6
-Tested up to: 6.7
-Stable tag: 20241016
-Version:    20241016
+Requires at least: 4.7
+Tested up to: 6.8
+Stable tag: 20250327
+Version:    20250327
 Requires PHP: 5.6.20
 Text Domain: head-meta-data
 Domain Path: /languages
@@ -22,6 +22,10 @@ Adds a custom set of &lt;meta&gt; tags to the &lt;head&gt; section of all posts 
 
 
 == Description ==
+
+> 🤖 The easy way to add meta tags to your site
+> 🤖 Performance: light, fast, and user-friendly
+
 
 Head Meta Data (HMD) improves the definition and semantic quality of your web pages by adding a custom set of `<meta>` tags to the `<head>` section of your web pages.
 
@@ -71,7 +75,7 @@ This outputs dynamic titles and descriptions, useful for SEO. You also can add c
 * NEW: Add custom tags on any post or page
 * Use shortcodes to include dynamic information
 * Includes meta tags on all of your site's web pages
-* Check out a Live Preview of your meta tags & custom content
+* Check out a Live Preview of your meta tags and custom tags
 * Automatically adds tags to the `<head>` section of all pages
 * Auto-populates tags using your site's information
 * Choose HTML or XHTML format for meta tags
@@ -82,7 +86,7 @@ This outputs dynamic titles and descriptions, useful for SEO. You also can add c
 * Regularly updated and "future proof"
 * Lightweight, fast, and secure
 
-> Pro version coming soon! :)
+> 🤖 New! Check out [Head Meta PRO &raquo;](https://plugin-planet.com/head-meta-pro/)
 
 
 **Shortcodes**
@@ -101,6 +105,27 @@ Shortcodes enable you to include dynamic bits of information in your meta tags. 
 So you can display your own set of customized meta tags exactly as desired. See the [Installation section](https://wordpress.org/plugins/head-meta-data/#installation) for more information about the HMD shortcodes!
 
 
+**Pro Version Features**
+
+The [Pro version](https://plugin-planet.com/head-meta-pro/) can do everything the free version can do, PLUS:
+
+* Define meta tags for Custom Post Types
+* Define meta tags for each type of page-view (e.g., home, posts, pages, archive, search)
+* Define tags for Facebook (Open Graph)
+* Define tags for X (Twitter)
+* Define Facebook and X tags for each type of page view
+* 40+ advanced [shortcut variables](https://plugin-planet.com/head-meta-pro-shortcut-variables/) like `%%POST_AUTHOR%%` and `%%ARCHIVE_TYPE%%`
+* Dedicated "Meta Tags" meta box for posts and pages
+* Add custom meta tags to any post or page-view
+* Add custom script and style to any post or page-view
+* Meta Tags box integrates with SEO plugins
+* Additional meta tags beyond the free version
+* Dedicated setting for image_src link tag
+* Premium support for pro purchases
+
+> 🤖 Level up your meta tags with [Head Meta Pro &raquo;](https://plugin-planet.com/head-meta-pro/)
+
+
 **More Info**
 
 Head Meta Data is designed to complete a site's head construct by including some of the more obscure meta tags, such as "author", "copyright", "designer", and so forth. As a matter of practicality, the more widely used tags such as "description" and "keywords" have been omitted, as they are already included via wide variety of plugins (such as "All in One SEO") in a more dynamic way. Even so, adding "description", "keyword", or any other tags is easy from the plugin's settings page.
@@ -110,7 +135,7 @@ Head Meta Data is designed to complete a site's head construct by including some
 
 This plugin does not collect or store any user data. It does not set any cookies, and it does not connect to any third-party locations. Thus, this plugin does not affect user privacy in any way.
 
-Head Meta Data is developed and maintained by [Jeff Starr](https://twitter.com/perishable), 15-year [WordPress developer](https://plugin-planet.com/) and [book author](https://books.perishablepress.com/).
+Head Meta Data is developed and maintained by [Jeff Starr](https://x.com/perishable), 15-year [WordPress developer](https://plugin-planet.com/) and [book author](https://books.perishablepress.com/).
 
 
 **Support development**
@@ -129,6 +154,7 @@ And/or purchase one of my premium WordPress plugins:
 * [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Automatically block bad bots
 * [Banhammer Pro](https://plugin-planet.com/banhammer-pro/) - Monitor traffic and ban the bad guys
 * [GA Google Analytics Pro](https://plugin-planet.com/ga-google-analytics-pro/) - Connect WordPress to Google Analytics
+* [Head Meta Pro](https://plugin-planet.com/head-meta-pro/) - Ultimate Meta Tags for WordPress
 * [Simple Ajax Chat Pro](https://plugin-planet.com/simple-ajax-chat-pro/) - Unlimited chat rooms
 * [USP Pro](https://plugin-planet.com/usp-pro/) - Unlimited front-end forms
 
@@ -159,7 +185,7 @@ Shortcodes enable you to include dynamic bits of information in your meta tags. 
 * `[hmd_year]`         -- current year
 * `[hmd_tab]`          -- adds tab space to markup
 
-So you can include any of these shortcodes in the "Custom Content" setting, and the displayed information will reflect the current post being viewed. On non-post views, like the homepage, archives, and search results, the shortcodes display general information about the site:
+So you can include any of these shortcodes in the "Custom Tags" setting, and the displayed information will reflect the current post being viewed. On non-post views, like the homepage, archives, and search results, the shortcodes display general information about the site:
 
 * `[hmd_post_excerpt]` -- site description
 * `[hmd_post_date]`    -- date of latest post
@@ -168,7 +194,9 @@ So you can include any of these shortcodes in the "Custom Content" setting, and 
 * `[hmd_post_cats]`    -- all view categories
 * `[hmd_post_tags]`    -- all view tags
 
-For example, we could add this meta tag via the "Custom Content" setting:
+> 🤖 __Note:__ Many more [shortcut variables](https://plugin-planet.com/head-meta-pro-shortcut-variables/) available in the [Pro version &raquo;](https://plugin-planet.com/head-meta-pro/)
+
+For example, we could add this meta tag via the "Custom Tags" setting:
 
 	<meta name="date" content="[hmd_post_date]">
 	<meta name="abstract" content="[hmd_post_title]">
@@ -195,6 +223,8 @@ Using this method, you can add custom meta tags to the &lt;head&gt; section of a
 4. For the custom field Name, enter `head-meta-data`
 5. For the custom field Value, enter any tag/markup
 6. Save changes and done.
+
+> 🤖 __Note:__ The [Pro version](https://plugin-planet.com/head-meta-pro/) provides a [Meta Tags Box](https://plugin-planet.com/wp/wp-content/themes/planet/img/plugins/hmp/hmp-settings-meta-gut.png) UI for adding tags to individual posts and pages
 
 For example, for the custom field value, we could enter the following markup:
 
@@ -260,13 +290,22 @@ To ask a question, suggest a feature, or provide feedback, [contact me directly]
 
 If you like Head Meta Data, please take a moment to [give a 5-star rating](https://wordpress.org/support/plugin/head-meta-data/reviews/?rate=5#new-post). It helps to keep development and support going strong. Thank you!
 
+> 🤖 New Pro version available! Check out [Head Meta Pro &raquo;](https://plugin-planet.com/head-meta-pro/)
 
-**20241016**
 
+**20250327**
+
+* Removes `hmd_i18n_init()` function
+* Relocates example of custom meta tag
+* Renames "Custom content" to "Custom Tags"
+* Adds function to check if pro version active
+* Adds uninstall option `head-meta-data-dismiss-notice`
+* Fixes PHP Notice, re: `_load_textdomain_just_in_time`
+* Sets "Restore Defaults" panel to hidden by default
+* Bumps minimum required WP version
 * Updates plugin settings page
-* Adds Lithaunian translation
-* Updates default translation template
-* Tests on WordPress 6.7 (beta)
+* Generates new language template
+* Tests on WordPress 6.8
 
 
 Full changelog @ [https://plugin-planet.com/wp/changelog/head-meta-data.txt](https://plugin-planet.com/wp/changelog/head-meta-data.txt)

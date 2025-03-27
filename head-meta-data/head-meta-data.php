@@ -8,10 +8,10 @@
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
-	Requires at least: 4.6
-	Tested up to: 6.7
-	Stable tag: 20241016
-	Version:    20241016
+	Requires at least: 4.7
+	Tested up to: 6.8
+	Stable tag: 20250327
+	Version:    20250327
 	Requires PHP: 5.6.20
 	Text Domain: head-meta-data
 	Domain Path: /languages
@@ -32,28 +32,30 @@
 	You should have received a copy of the GNU General Public License
 	with this program. If not, visit: https://www.gnu.org/licenses/
 	
-	Copyright 2024 Monzilla Media. All rights reserved.
+	Copyright 2025 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
 
-$hmd_wp_vers = '4.6';
-$hmd_version = '20241016';
-$hmd_plugin  = esc_html__('Head Meta Data', 'head-meta-data');
+$hmd_wp_vers = '4.7';
+$hmd_version = '20250327';
+$hmd_plugin  = 'Head Meta Data';
 $hmd_options = get_option('hmd_options');
 $hmd_path    = plugin_basename(__FILE__); // head-meta-data/head-meta-data.php
 $hmd_homeurl = 'https://perishablepress.com/head-metadata-plus/';
 
-function hmd_i18n_init() {
+
+
+function hmd_check_pro() {
 	
 	global $hmd_path;
 	
-	$hmd_path = $hmd_path ? dirname($hmd_path) : null;
-	
-	if ($hmd_path) load_plugin_textdomain('head-meta-data', false, $hmd_path .'/languages/');
+	if (function_exists('head_meta_pro_options')) deactivate_plugins($hmd_path);
 	
 }
-add_action('init', 'hmd_i18n_init');
+add_action('admin_init', 'hmd_check_pro');
+
+
 
 function hmd_require_wp_version() {
 	
@@ -426,7 +428,7 @@ function hmd_add_defaults() {
 			'hmd_subject'     => $subjects,
 			'hmd_template'    => $the_theme,
 			'hmd_enable'      => 1,
-			'hmd_custom'      => '<meta name="example" content="custom: [hmd_post_date]">',
+			'hmd_custom'      => '',
 			'hmd_format'      => 1,
 			'hmd_robots'      => 'index,follow',
 		);
@@ -563,7 +565,7 @@ function hmd_render_form() {
 		#mm-plugin-options .mm-code { 
 			display: inline-block; margin: 0 1px; padding: 3px; direction: ltr; unicode-bidi: embed;
 			color: #333; background-color: #eaeaea; background-color: rgba(0,0,0,0.07);
-			font-size: 13px; font-family: Consolas, Monaco, monospace;
+			font-size: 12px; font-family: Consolas, Monaco, monospace;
 			}
 		#mm-plugin-options .mm-item-caption { margin: 3px 0 0 3px; line-height: 17px; font-size: 12px; color: #777; }
 		#mm-plugin-options .mm-item-caption code { margin: 0; padding: 3px; font-size: 12px; background: #f2f2f2; background-color: rgba(0,0,0,0.05); }
@@ -635,9 +637,12 @@ function hmd_render_form() {
 										<a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/support/plugin/head-meta-data/reviews/?rate=5#new-post" title="<?php esc_attr_e('THANK YOU for your support!', 'head-meta-data'); ?>"><?php esc_html_e('give it a 5-star rating', 'head-meta-data'); ?>&nbsp;&raquo;</a>
 									</p>
 								</div>
-								<!--div class="info">
-									<p>🔥 <?php esc_html_e('Pro version coming soon!', 'head-meta-data'); ?></p>
-								</div-->
+								<div class="info">
+									<p>
+										🔥 <?php esc_html_e('Pro launch! Check out', 'head-meta-data'); ?> 
+										<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/head-meta-pro/" title="<?php esc_html_e('Get Head Meta Pro!', 'head-meta-data'); ?>"><?php esc_html_e('Head Meta Pro', 'head-meta-data'); ?>&nbsp;&raquo;</a>
+									</p>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -648,7 +653,7 @@ function hmd_render_form() {
 							<h3><?php esc_html_e('Meta Tags', 'head-meta-data'); ?></h3>
 							<p>
 								<?php esc_html_e('Here you may define your', 'head-meta-data'); ?> <code>&lt;meta&gt;</code> <?php esc_html_e('tags. To disable any tag, leave it blank.', 'head-meta-data'); ?> 
-								<?php esc_html_e('To add more tags, visit the option &ldquo;Custom Content&rdquo; below.', 'head-meta-data'); ?> 
+								<?php esc_html_e('To add more tags, visit the option &ldquo;Custom Tags&rdquo; below.', 'head-meta-data'); ?> 
 							</p>
 							<div class="mm-table-wrap">
 								<table class="widefat mm-table">
@@ -740,15 +745,19 @@ function hmd_render_form() {
 									<tr>
 										<th scope="row"><label><?php esc_html_e('More tags', 'head-meta-data'); ?></label></th>
 										<td>
-											<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/support/#contact" title="<?php esc_html_e('Contact the developer via contact form', 'head-meta-data'); ?>">
-											<?php esc_html_e('Suggest more meta tags', 'head-meta-data'); ?>&nbsp;&raquo;</a>
+											<?php esc_html_e('Want more tags? PRO gives you more tags and', 'head-meta-data'); ?> 
+											<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/head-meta-pro-shortcut-variables/" title="<?php esc_html_e('Shortcut variables for Pro version', 'head-meta-data'); ?>"><?php esc_html_e('shortcut variables', 'head-meta-data'); ?></a>. 
+											<?php esc_html_e('Add tags for Facebook, Twitter, and', 'head-meta-data'); ?> 
+											<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/wp/wp-content/themes/planet/img/plugins/hmp/hmp-settings.png" title="<?php esc_html_e('View screenshot of Pro settings', 'head-meta-data'); ?>"><?php esc_html_e('each type of page-view', 'head-meta-data'); ?></a> 
+											<?php esc_html_e('(home, posts, archives, and more). Level up your meta game with', 'head-meta-data'); ?> 
+											<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/head-meta-pro/" title="<?php esc_html_e('Get Head Meta Pro!', 'head-meta-data'); ?>"><?php esc_html_e('Head Meta Pro', 'head-meta-data'); ?>&nbsp;&raquo;</a>
 										</td>
 									</tr>
 								</table>
 							</div>
-							<h3><?php esc_html_e('Custom Content', 'head-meta-data'); ?></h3>
+							<h3><?php esc_html_e('Custom Tags', 'head-meta-data'); ?></h3>
 							<p>
-								<?php esc_html_e('Here you may define any custom content that should be included in the head section of your pages. You also can add custom tags to specific posts and pages. Check the', 'head-meta-data'); ?> 
+								<?php esc_html_e('Here you may define any custom tags or markup that should be included in the head section of your pages. You also can add custom tags to specific posts and pages. Check the', 'head-meta-data'); ?> 
 								<a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/plugins/head-meta-data/#installation"><?php esc_html_e('Installation docs', 'head-meta-data'); ?></a> <?php esc_html_e('(under &ldquo;Custom meta tags&rdquo;) for more details.', 'head-meta-data'); ?>
 							</p>
 							<p>
@@ -756,16 +765,19 @@ function hmd_render_form() {
 								<span class="mm-code">[hmd_post_excerpt]</span>, <span class="mm-code">[hmd_post_date]</span>, <span class="mm-code">[hmd_post_author]</span>, <span class="mm-code">[hmd_post_title]</span>, 
 								<span class="mm-code">[hmd_post_cats]</span>, <span class="mm-code">[hmd_post_tags]</span>, <span class="mm-code">[hmd_year]</span>, <span class="mm-code">[hmd_tab]</span> = tab/space.
 							</p>
+							<p><?php esc_html_e('Here is an example of how to add a custom meta tag:', 'head-meta-data'); ?> <code>&lt;meta name="example" content="custom: [hmd_post_date]"&gt;</code></p>
 							<div class="mm-table-wrap">
 								<table class="widefat mm-table">
 									<tr>
-										<th scope="row"><label for="hmd_options[hmd_custom]"><?php esc_html_e('Custom content', 'head-meta-data'); ?></label></th>
+										<th scope="row"><label for="hmd_options[hmd_custom]"><?php esc_html_e('Custom Tags', 'head-meta-data'); ?></label></th>
 										<td>
 											<textarea class="large-text code" type="textarea" rows="7" cols="55" name="hmd_options[hmd_custom]"><?php if (isset($hmd_options['hmd_custom'])) echo esc_textarea($hmd_options['hmd_custom']); ?></textarea>
 											<div class="mm-item-caption">
-												<?php esc_html_e('Optional tags/markup for the', 'head-meta-data'); ?> <code>&lt;head&gt;</code> 
-												<?php esc_html_e('section (leave blank to disable). For more ideas, check out', 'head-meta-data'); ?> 
-												<a target="_blank" rel="noopener noreferrer" href="https://perishablepress.com/xhtml-document-header-resource/"><?php esc_html_e('this article at Perishable Press', 'head-meta-data'); ?>&nbsp;&raquo;</a>
+												<?php esc_html_e('Optional tags for the', 'head-meta-data'); ?> <code>&lt;head&gt;</code> 
+												<?php esc_html_e('section (leave blank to disable). For way more', 'head-meta-data'); ?> 
+												<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/head-meta-pro-shortcut-variables/" title="<?php esc_html_e('Shortcut variables for Pro version', 'head-meta-data'); ?>"><?php esc_html_e('shortcut variables', 'head-meta-data'); ?></a>, 
+												<?php esc_html_e('check out the', 'head-meta-data'); ?> 
+												<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/head-meta-pro/" title="<?php esc_html_e('Get Head Meta Pro!', 'head-meta-data'); ?>"><?php esc_html_e('Pro version', 'head-meta-data'); ?>&nbsp;&raquo;</a>
 											</div>
 										</td>
 									</tr>
@@ -778,16 +790,30 @@ function hmd_render_form() {
 					<div id="mm-panel-secondary" class="postbox">
 						<h2><?php esc_html_e('Live Preview', 'head-meta-data'); ?></h2>
 						<div class="toggle default-hidden">
-							<p><?php esc_html_e('Here is a preview of your meta tags and custom content. Note that any special characters will be encoded in the actual page markup.', 'head-meta-data'); ?></p>
+							<p><?php esc_html_e('Here is a preview of your meta tags. Note that any special characters will be encoded in the actual page markup.', 'head-meta-data'); ?></p>
 							<div class="mm-code-example">
 								
-								<h3><?php esc_html_e('Meta tags', 'head-meta-data'); ?></h3>
+								<h3><?php esc_html_e('Meta Tags', 'head-meta-data'); ?></h3>
 								<p><?php esc_html_e('When meta tags are enabled, the following code will be added to the head section of your web pages.', 'head-meta-data'); ?></p>
 								<pre><?php echo do_shortcode('[head_meta_data]', 'head-meta-data'); ?></pre>
 								
-								<h3><?php esc_html_e('Custom content', 'head-meta-data'); ?></h3>
+								<h3><?php esc_html_e('Custom Tags', 'head-meta-data'); ?></h3>
 								<p><?php esc_html_e('Visit your front-end pages to view any dynamic shortcode output.', 'head-meta-data'); ?></p>
-								<pre><?php echo do_shortcode('[hmd_custom]', 'head-meta-data'); ?></pre>
+								
+								
+								<pre><?php $shortcode = do_shortcode('[hmd_custom]', 'head-meta-data');
+									
+									if ($shortcode) {
+										
+										echo do_shortcode('[hmd_custom]', 'head-meta-data'); 
+										
+									} else {
+										
+										esc_html_e('No custom tags defined.', 'head-meta-data');
+										
+									}
+									
+								?></pre>
 								
 								<h3><?php esc_html_e('More infos', 'head-meta-data'); ?></h3>
 								<ul>
@@ -799,6 +825,10 @@ function hmd_render_form() {
 										<?php esc_html_e('And more specifically the section on meta tags:', 'head-meta-data'); ?> 
 										<a target="_blank" rel="noopener noreferrer" href="https://m0n.co/d" title="<?php esc_attr_e('XHTML Document Header Resource: meta tags', 'head-meta-data'); ?>">https://m0n.co/d</a>
 									</li>
+									<li>
+										<?php esc_html_e('Level up your meta game with', 'head-meta-data'); ?> 
+										<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/head-meta-pro/" title="<?php esc_html_e('Get Head Meta Pro!', 'head-meta-data'); ?>"><?php esc_html_e('Head Meta Pro', 'head-meta-data'); ?>&nbsp;&raquo;</a>
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -806,7 +836,7 @@ function hmd_render_form() {
 					
 					<div id="mm-restore-settings" class="postbox">
 						<h2><?php esc_html_e('Restore Defaults', 'head-meta-data'); ?></h2>
-						<div class="toggle<?php if (!isset($_GET["settings-updated"])) { echo ' default-hidden'; } ?>">
+						<div class="toggle default-hidden">
 							<p>
 								<input name="hmd_options[default_options]" type="checkbox" value="1" id="mm_restore_defaults" <?php if (isset($hmd_options['default_options'])) { checked('1', $hmd_options['default_options']); } ?>> 
 								<?php esc_html_e('Restore default options upon plugin deactivation/reactivation.', 'head-meta-data'); ?>
@@ -833,7 +863,7 @@ function hmd_render_form() {
 			
 			<div class="mm-credit-info">
 				<a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url($hmd_homeurl); ?>" title="<?php esc_attr_e('Plugin Homepage', 'head-meta-data'); ?>"><?php echo esc_html($hmd_plugin); ?></a> <?php esc_html_e('by', 'head-meta-data'); ?> 
-				<a target="_blank" rel="noopener noreferrer" href="https://twitter.com/perishable" title="<?php esc_attr_e('Jeff Starr on Twitter', 'head-meta-data'); ?>">Jeff Starr</a> @ 
+				<a target="_blank" rel="noopener noreferrer" href="https://x.com/perishable" title="<?php esc_attr_e('Jeff Starr on X (Twitter)', 'head-meta-data'); ?>">Jeff Starr</a> @ 
 				<a target="_blank" rel="noopener noreferrer" href="https://monzillamedia.com/" title="<?php esc_attr_e('Obsessive Web Design &amp; Development', 'head-meta-data'); ?>">Monzilla Media</a>
 			</div>
 			
@@ -885,14 +915,14 @@ function hmd_admin_notice() {
 			
 			?>
 			
-			<div class="notice notice-success notice-margin">
+			<div class="notice notice-success notice-margin notice-custom">
 				<p>
-					<strong><?php esc_html_e('Fall Sale!', 'head-meta-data'); ?></strong> 
-					<?php esc_html_e('Take 25% OFF any of our', 'head-meta-data'); ?> 
+					<strong><?php esc_html_e('Spring Sale!', 'head-meta-data'); ?></strong> 
+					<?php esc_html_e('Take 30% OFF any of our', 'head-meta-data'); ?> 
 					<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'head-meta-data'); ?></a> 
 					<?php esc_html_e('and', 'head-meta-data'); ?> 
 					<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/"><?php esc_html_e('books', 'head-meta-data'); ?></a>. 
-					<?php esc_html_e('Apply code', 'head-meta-data'); ?> <code>FALL2024</code> <?php esc_html_e('at checkout. Sale ends 12/21/24.', 'head-meta-data'); ?> 
+					<?php esc_html_e('Apply code', 'head-meta-data'); ?> <code>SPRING2025</code> <?php esc_html_e('at checkout. Sale ends 6/25/2025.', 'head-meta-data'); ?> 
 					<?php echo hmd_dismiss_notice_link(); ?>
 				</p>
 			</div>
@@ -977,7 +1007,7 @@ function hmd_dismiss_notice_link() {
 
 function hmd_check_date_expired() {
 	
-	$expires = apply_filters('hmd_check_date_expired', '2024-12-21');
+	$expires = apply_filters('hmd_check_date_expired', '2025-06-25');
 	
 	return (new DateTime() > new DateTime($expires)) ? true : false;
 	
