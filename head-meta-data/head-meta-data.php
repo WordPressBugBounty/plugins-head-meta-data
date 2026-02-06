@@ -9,9 +9,9 @@
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
 	Requires at least: 4.7
-	Tested up to: 6.8
-	Stable tag: 20250327
-	Version:    20250327
+	Tested up to: 6.9
+	Stable tag: 20260105
+	Version:    20260105
 	Requires PHP: 5.6.20
 	Text Domain: head-meta-data
 	Domain Path: /languages
@@ -38,13 +38,11 @@
 if (!defined('ABSPATH')) die();
 
 $hmd_wp_vers = '4.7';
-$hmd_version = '20250327';
+$hmd_version = '20260105';
 $hmd_plugin  = 'Head Meta Data';
 $hmd_options = get_option('hmd_options');
 $hmd_path    = plugin_basename(__FILE__); // head-meta-data/head-meta-data.php
 $hmd_homeurl = 'https://perishablepress.com/head-metadata-plus/';
-
-
 
 function hmd_check_pro() {
 	
@@ -55,7 +53,16 @@ function hmd_check_pro() {
 }
 add_action('admin_init', 'hmd_check_pro');
 
-
+function hmd_i18n_init() {
+	
+	global $hmd_path;
+	
+	$hmd_path = $hmd_path ? dirname($hmd_path) : null;
+	
+	if ($hmd_path) load_plugin_textdomain('head-meta-data', false, $hmd_path .'/languages/');
+	
+}
+add_action('init', 'hmd_i18n_init');
 
 function hmd_require_wp_version() {
 	
@@ -113,6 +120,67 @@ function hmd_disable_default() {
 	
 }
 
+function hmd_allowed_html() {
+	
+	$global = array(
+		'accesskey'       => array(),
+		'class'           => array(),
+		'contenteditable' => array(),
+		'dir'             => array(),
+		'draggable'       => array(),
+		'enterkeyhint'    => array(),
+		'hidden'          => array(),
+		'id'              => array(),
+		'inert'           => array(),
+		'inputmode'       => array(),
+		'lang'            => array(),
+		'popover'         => array(),
+		'spellcheck'      => array(),
+		'style'           => array(),
+		'tabindex'        => array(),
+		'title'           => array(),
+		'translate'       => array()
+	);
+	
+	$style = array(
+		'media' => array(),
+		'type'  => array()
+	);
+	
+	$meta = array(
+		'charset'    => array(),
+		'content'    => array(),
+		'http-equiv' => array(),
+		'name'       => array()
+	);
+	
+	$link = array(
+		'crossorigin'    => array(),
+		'href'           => array(),
+		'hreflang'       => array(),
+		'media'          => array(),
+		'referrerpolicy' => array(),
+		'rel'            => array(),
+		'sizes'          => array(),
+		'title'          => array(),
+		'type'           => array()
+	);
+	
+	$base = array(
+		'href'   => array(),
+		'target' => array()
+	);
+	
+	return array(
+		'title' => $global,
+		'style' => array_merge($global, $style),
+		'meta'  => array_merge($global, $meta),
+		'link'  => array_merge($global, $link),
+		'base'  => array_merge($global, $base),
+	);
+	
+}
+
 function hmd_display_custom() {
 	
 	if (!is_singular()) return;
@@ -127,7 +195,7 @@ function hmd_display_custom() {
 		
 		foreach ($value as $v) {
 			
-			$custom .= $v . "\n";
+			$custom .= wp_kses($v, hmd_allowed_html()) . "\n";
 			
 		}
 		
@@ -582,8 +650,7 @@ function hmd_render_form() {
 		.wp-admin .notice code { line-height: 1; font-size: 12px; }
 		.wp-admin .hmd-dismiss-notice { float: right; }
 		
-		.wp-admin .notice-margin p { margin: 10px 0; }
-		
+		.wp-admin .notice-lh p { line-height: 1.8; }
 		.wp-admin .notice-custom { background-image: url(<?php echo plugins_url('/head-meta-data/images/sun-icon.png'); ?>); background-repeat: no-repeat; background-position: left 5px center; background-size: 60px 40px; }
 		.wp-admin .notice-custom p { margin: 15px 0; padding-left: 60px; line-height: 1.6; }
 		.wp-admin .notice-link { display: inline-block; margin-right: 5px; }
@@ -639,7 +706,7 @@ function hmd_render_form() {
 								</div>
 								<div class="info">
 									<p>
-										🔥 <?php esc_html_e('Pro launch! Check out', 'head-meta-data'); ?> 
+										🔥 <strong><?php esc_html_e('Go Pro!', 'head-meta-data'); ?></strong> <?php esc_html_e('Check out', 'head-meta-data'); ?> 
 										<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/head-meta-pro/" title="<?php esc_html_e('Get Head Meta Pro!', 'head-meta-data'); ?>"><?php esc_html_e('Head Meta Pro', 'head-meta-data'); ?>&nbsp;&raquo;</a>
 									</p>
 								</div>
@@ -915,14 +982,14 @@ function hmd_admin_notice() {
 			
 			?>
 			
-			<div class="notice notice-success notice-margin notice-custom">
+			<div class="notice notice-success notice-lh">
 				<p>
-					<strong><?php esc_html_e('Spring Sale!', 'head-meta-data'); ?></strong> 
-					<?php esc_html_e('Take 30% OFF any of our', 'head-meta-data'); ?> 
+					<strong><?php esc_html_e('Fall Sale!', 'head-meta-data'); ?></strong> 
+					<?php esc_html_e('Take 25% OFF any of our', 'head-meta-data'); ?> 
 					<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'head-meta-data'); ?></a> 
 					<?php esc_html_e('and', 'head-meta-data'); ?> 
 					<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/"><?php esc_html_e('books', 'head-meta-data'); ?></a>. 
-					<?php esc_html_e('Apply code', 'head-meta-data'); ?> <code>SPRING2025</code> <?php esc_html_e('at checkout. Sale ends 6/25/2025.', 'head-meta-data'); ?> 
+					<?php esc_html_e('Apply code', 'head-meta-data'); ?> <code>FALL2025</code> <?php esc_html_e('at checkout. Sale ends 1/11/2026.', 'head-meta-data'); ?> 
 					<?php echo hmd_dismiss_notice_link(); ?>
 				</p>
 			</div>
@@ -1007,7 +1074,7 @@ function hmd_dismiss_notice_link() {
 
 function hmd_check_date_expired() {
 	
-	$expires = apply_filters('hmd_check_date_expired', '2025-06-25');
+	$expires = apply_filters('hmd_check_date_expired', '2026-01-11');
 	
 	return (new DateTime() > new DateTime($expires)) ? true : false;
 	

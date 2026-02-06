@@ -9,9 +9,9 @@ Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Contributors: specialk
 Requires at least: 4.7
-Tested up to: 6.8
-Stable tag: 20250327
-Version:    20250327
+Tested up to: 6.9
+Stable tag: 20260105
+Version:    20260105
 Requires PHP: 5.6.20
 Text Domain: head-meta-data
 Domain Path: /languages
@@ -114,13 +114,13 @@ The [Pro version](https://plugin-planet.com/head-meta-pro/) can do everything th
 * Define tags for Facebook (Open Graph)
 * Define tags for X (Twitter)
 * Define Facebook and X tags for each type of page view
-* 40+ advanced [shortcut variables](https://plugin-planet.com/head-meta-pro-shortcut-variables/) like `%%POST_AUTHOR%%` and `%%ARCHIVE_TYPE%%`
+* 40+ advanced [shortcut variables](https://plugin-planet.com/head-meta-pro-shortcut-variables/) like `%POST_AUTHOR%` and `%ARCHIVE_TYPE%`
 * Dedicated "Meta Tags" meta box for posts and pages
 * Add custom meta tags to any post or page-view
 * Add custom script and style to any post or page-view
 * Meta Tags box integrates with SEO plugins
 * Additional meta tags beyond the free version
-* Dedicated setting for image_src link tag
+* Dedicated setting for `image_src` link tag
 * Premium support for pro purchases
 
 > 🤖 Level up your meta tags with [Head Meta Pro &raquo;](https://plugin-planet.com/head-meta-pro/)
@@ -150,7 +150,7 @@ I develop and maintain this free plugin with love for the WordPress community. T
 
 And/or purchase one of my premium WordPress plugins:
 
-* [BBQ Pro](https://plugin-planet.com/bbq-pro/) - Super fast WordPress firewall
+* [BBQ Pro](https://plugin-planet.com/bbq-pro/) - Blazing fast WordPress firewall
 * [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Automatically block bad bots
 * [Banhammer Pro](https://plugin-planet.com/banhammer-pro/) - Monitor traffic and ban the bad guys
 * [GA Google Analytics Pro](https://plugin-planet.com/ga-google-analytics-pro/) - Connect WordPress to Google Analytics
@@ -260,15 +260,15 @@ If you like Head Meta Data, please take a moment to [give a 5-star rating](https
 
 **Uninstalling**
 
-Head Meta Data cleans up after itself. All plugin settings will be removed from your database when the plugin is uninstalled via the Plugins screen.
+This plugin cleans up after itself. All plugin settings will be removed from the WordPress database when the plugin is uninstalled via the Plugins screen. Any custom fields will NOT be removed, only plugin settings.
 
 
 
 == Upgrade Notice ==
 
-To upgrade Head Meta Data, remove the old version and replace with the new version. Or just click "Update" from the Plugins screen and let WordPress do it for you automatically.
+Visit the WordPress Plugins screen, locate the plugin, and click "Update" :)
 
-__Note:__ uninstalling the plugin from the WP Plugins screen results in the removal of all settings from the WP database. 
+__Note:__ Deleting this plugin via the WordPress Plugins screen will remove all of its settings from the WordPress database. Any custom fields will NOT be removed, only plugin settings.
 
 
 
@@ -293,19 +293,10 @@ If you like Head Meta Data, please take a moment to [give a 5-star rating](https
 > 🤖 New Pro version available! Check out [Head Meta Pro &raquo;](https://plugin-planet.com/head-meta-pro/)
 
 
-**20250327**
+**20260105**
 
-* Removes `hmd_i18n_init()` function
-* Relocates example of custom meta tag
-* Renames "Custom content" to "Custom Tags"
-* Adds function to check if pro version active
-* Adds uninstall option `head-meta-data-dismiss-notice`
-* Fixes PHP Notice, re: `_load_textdomain_just_in_time`
-* Sets "Restore Defaults" panel to hidden by default
-* Bumps minimum required WP version
-* Updates plugin settings page
-* Generates new language template
-* Tests on WordPress 6.8
+* Further improves sanitization for custom fields
+* Tests on WordPress 6.9
 
 
 Full changelog @ [https://plugin-planet.com/wp/changelog/head-meta-data.txt](https://plugin-planet.com/wp/changelog/head-meta-data.txt)
