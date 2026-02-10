@@ -3,22 +3,20 @@
 	Plugin Name: Head Meta Data
 	Plugin URI: https://perishablepress.com/head-metadata-plus/
 	Description: Adds a custom set of &lt;meta&gt; tags to the &lt;head&gt; section of all posts &amp; pages.
-	Tags: meta, metadata, header, author, publisher
+	Tags: meta, metadata, seo, robots
 	Author: Jeff Starr
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
 	Requires at least: 4.7
 	Tested up to: 6.9
-	Stable tag: 20260105
-	Version:    20260105
+	Stable tag: 20260209
+	Version:    20260209
 	Requires PHP: 5.6.20
 	Text Domain: head-meta-data
 	Domain Path: /languages
 	License: GPL v2 or later
-*/
-
-/*
+	
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 
@@ -32,54 +30,63 @@
 	You should have received a copy of the GNU General Public License
 	with this program. If not, visit: https://www.gnu.org/licenses/
 	
-	Copyright 2025 Monzilla Media. All rights reserved.
+	Copyright 2006-2026 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
 
-$hmd_wp_vers = '4.7';
-$hmd_version = '20260105';
-$hmd_plugin  = 'Head Meta Data';
-$hmd_options = get_option('hmd_options');
-$hmd_path    = plugin_basename(__FILE__); // head-meta-data/head-meta-data.php
-$hmd_homeurl = 'https://perishablepress.com/head-metadata-plus/';
+
+$head_meta_data_version_wp = '4.7';
+$head_meta_data_version    = '20260209';
+$head_meta_data_plugin     = 'Head Meta Data';
+$head_meta_data_options    = get_option('hmd_options');
+$head_meta_data_path       = plugin_basename(__FILE__); // head-meta-data/head-meta-data.php
+$head_meta_data_homeurl    = 'https://perishablepress.com/head-metadata-plus/';
+
 
 function hmd_check_pro() {
 	
-	global $hmd_path;
+	global $head_meta_data_path;
 	
-	if (function_exists('head_meta_pro_options')) deactivate_plugins($hmd_path);
+	if (function_exists('head_meta_pro_options')) deactivate_plugins($head_meta_data_path);
 	
 }
 add_action('admin_init', 'hmd_check_pro');
 
+
 function hmd_i18n_init() {
 	
-	global $hmd_path;
+	global $head_meta_data_path;
 	
-	$hmd_path = $hmd_path ? dirname($hmd_path) : null;
+	$path = $head_meta_data_path; // don't modify global variable
 	
-	if ($hmd_path) load_plugin_textdomain('head-meta-data', false, $hmd_path .'/languages/');
+	$path = $path ? dirname($path) : null;
+	
+	if ($path) load_plugin_textdomain('head-meta-data', false, $path .'/languages/');
 	
 }
 add_action('init', 'hmd_i18n_init');
 
+
 function hmd_require_wp_version() {
 	
-	global $hmd_path, $hmd_plugin, $hmd_wp_vers;
+	global $head_meta_data_path, $head_meta_data_plugin, $head_meta_data_version_wp;
 	
 	if (isset($_GET['activate']) && $_GET['activate'] == 'true') {
 		
 		$wp_version = get_bloginfo('version');
 		
-		if (version_compare($wp_version, $hmd_wp_vers, '<')) {
+		if (version_compare($wp_version, $head_meta_data_version_wp, '<')) {
 			
-			if (is_plugin_active($hmd_path)) {
+			if (is_plugin_active($head_meta_data_path)) {
 				
-				deactivate_plugins($hmd_path);
+				deactivate_plugins($head_meta_data_path);
 				
-				$msg  = '<strong>' . $hmd_plugin . '</strong> ' . esc_html__('requires WordPress ', 'head-meta-data') . $hmd_wp_vers . esc_html__(' or higher, and has been deactivated!', 'head-meta-data') . '<br />';
-				$msg .= esc_html__('Please return to the', 'head-meta-data') . ' <a href="' . admin_url() . '">' . esc_html__('WordPress Admin area', 'head-meta-data') . '</a> ' . esc_html__('to upgrade WordPress and try again.', 'head-meta-data');
+				$msg  = '<strong>' . $head_meta_data_plugin . '</strong> ' . esc_html__('requires WordPress ', 'head-meta-data');
+				$msg .= $head_meta_data_version_wp . esc_html__(' or higher, and has been deactivated! ', 'head-meta-data');
+				$msg .= esc_html__('Please return to the', 'head-meta-data') . ' <a href="' . admin_url() . '">';
+				$msg .= esc_html__('WordPress Admin area', 'head-meta-data') . '</a> ';
+				$msg .= esc_html__('to upgrade WordPress and try again.', 'head-meta-data');
 				
 				wp_die($msg);
 				
@@ -92,6 +99,7 @@ function hmd_require_wp_version() {
 }
 add_action('admin_init', 'hmd_require_wp_version');
 
+
 function head_meta_data() {
 	
 	echo hmd_display_content();
@@ -99,7 +107,8 @@ function head_meta_data() {
 }
 add_action('wp_head', 'head_meta_data');
 
-function hmd_shortcode() {
+
+function hmd_shortcode() { // internal use only
 	
 	$get_meta_data = hmd_display_content();
 	
@@ -110,6 +119,7 @@ function hmd_shortcode() {
 }
 add_shortcode('head_meta_data','hmd_shortcode');
 
+
 function hmd_disable_default() {
 	
 	if (!is_singular()) return;
@@ -119,6 +129,7 @@ function hmd_disable_default() {
 	return get_post_meta($post->ID, 'hmd_disable_default', true);
 	
 }
+
 
 function hmd_allowed_html() {
 	
@@ -181,6 +192,7 @@ function hmd_allowed_html() {
 	
 }
 
+
 function hmd_display_custom() {
 	
 	if (!is_singular()) return;
@@ -195,6 +207,8 @@ function hmd_display_custom() {
 		
 		foreach ($value as $v) {
 			
+			$v = hmd_filter_shortcodes($v);
+			
 			$custom .= wp_kses($v, hmd_allowed_html()) . "\n";
 			
 		}
@@ -205,34 +219,51 @@ function hmd_display_custom() {
 	
 }
 
+
+function hmd_primary_tags($options, $close) {
+	
+	$output = '';
+	
+	if (isset($options['hmd_charset'])    && $options['hmd_charset']    !== '') $output  = "\t\t" .'<meta charset="'                       . $options['hmd_charset']    . $close;
+	if (isset($options['hmd_abstract'])   && $options['hmd_abstract']   !== '') $output .= "\t\t" .'<meta name="abstract" content="'       . $options['hmd_abstract']   . $close;
+	if (isset($options['hmd_author'])     && $options['hmd_author']     !== '') $output .= "\t\t" .'<meta name="author" content="'         . $options['hmd_author']     . $close;
+	if (isset($options['hmd_classify'])   && $options['hmd_classify']   !== '') $output .= "\t\t" .'<meta name="classification" content="' . $options['hmd_classify']   . $close;
+	if (isset($options['hmd_copyright'])  && $options['hmd_copyright']  !== '') $output .= "\t\t" .'<meta name="copyright" content="'      . $options['hmd_copyright']  . $close;
+	if (isset($options['hmd_desc'])       && $options['hmd_desc']       !== '') $output .= "\t\t" .'<meta name="description" content="'    . $options['hmd_desc']       . $close;
+	if (isset($options['hmd_designer'])   && $options['hmd_designer']   !== '') $output .= "\t\t" .'<meta name="designer" content="'       . $options['hmd_designer']   . $close;
+	if (isset($options['hmd_distribute']) && $options['hmd_distribute'] !== '') $output .= "\t\t" .'<meta name="distribution" content="'   . $options['hmd_distribute'] . $close;
+	if (isset($options['hmd_keywords'])   && $options['hmd_keywords']   !== '') $output .= "\t\t" .'<meta name="keywords" content="'       . $options['hmd_keywords']   . $close;
+	if (isset($options['hmd_language'])   && $options['hmd_language']   !== '') $output .= "\t\t" .'<meta name="language" content="'       . $options['hmd_language']   . $close;
+	if (isset($options['hmd_publisher'])  && $options['hmd_publisher']  !== '') $output .= "\t\t" .'<meta name="publisher" content="'      . $options['hmd_publisher']  . $close;
+	if (isset($options['hmd_rating'])     && $options['hmd_rating']     !== '') $output .= "\t\t" .'<meta name="rating" content="'         . $options['hmd_rating']     . $close;
+	if (isset($options['hmd_resource'])   && $options['hmd_resource']   !== '') $output .= "\t\t" .'<meta name="resource-type" content="'  . $options['hmd_resource']   . $close;
+	if (isset($options['hmd_revisit'])    && $options['hmd_revisit']    !== '') $output .= "\t\t" .'<meta name="revisit-after" content="'  . $options['hmd_revisit']    . $close;
+	if (isset($options['hmd_subject'])    && $options['hmd_subject']    !== '') $output .= "\t\t" .'<meta name="subject" content="'        . $options['hmd_subject']    . $close;
+	if (isset($options['hmd_template'])   && $options['hmd_template']   !== '') $output .= "\t\t" .'<meta name="template" content="'       . $options['hmd_template']   . $close;
+	if (isset($options['hmd_robots'])     && $options['hmd_robots']     !== '') $output .= "\t\t" .'<meta name="robots" content="'         . $options['hmd_robots']     . $close;
+	
+	$output = hmd_filter_shortcodes($output);
+	
+	return $output;
+	
+}
+
+
 function hmd_display_content() {
 	
-	global $hmd_options;
+	global $head_meta_data_options;
 	
 	$hmd_output = '';
 	
-	$hmd_enable = isset($hmd_options['hmd_enable']) ? $hmd_options['hmd_enable'] : false; 
-	$hmd_format = isset($hmd_options['hmd_format']) ? $hmd_options['hmd_format'] : false;
+	$hmd_enable = isset($head_meta_data_options['hmd_enable']) ? $head_meta_data_options['hmd_enable'] : false; 
+	$hmd_format = isset($head_meta_data_options['hmd_format']) ? $head_meta_data_options['hmd_format'] : false;
 	
-	$close_tag = ($hmd_format == false) ? '" />' . "\n" : $close_tag = '">' . "\n";
+	$close_tag = ($hmd_format == false) ? '" />'. "\n" : $close_tag = '">'. "\n";
 	
 	if ($hmd_enable == true && !hmd_disable_default()) {
 		
-		if (isset($hmd_options['hmd_charset'])    && $hmd_options['hmd_charset']    !== '') $hmd_output  = "\t\t" .'<meta charset="'                       . $hmd_options['hmd_charset']    . $close_tag;
-		if (isset($hmd_options['hmd_abstract'])   && $hmd_options['hmd_abstract']   !== '') $hmd_output .= "\t\t" .'<meta name="abstract" content="'       . $hmd_options['hmd_abstract']   . $close_tag;
-		if (isset($hmd_options['hmd_author'])     && $hmd_options['hmd_author']     !== '') $hmd_output .= "\t\t" .'<meta name="author" content="'         . $hmd_options['hmd_author']     . $close_tag;
-		if (isset($hmd_options['hmd_classify'])   && $hmd_options['hmd_classify']   !== '') $hmd_output .= "\t\t" .'<meta name="classification" content="' . $hmd_options['hmd_classify']   . $close_tag;
-		if (isset($hmd_options['hmd_copyright'])  && $hmd_options['hmd_copyright']  !== '') $hmd_output .= "\t\t" .'<meta name="copyright" content="'      . $hmd_options['hmd_copyright']  . $close_tag;
-		if (isset($hmd_options['hmd_designer'])   && $hmd_options['hmd_designer']   !== '') $hmd_output .= "\t\t" .'<meta name="designer" content="'       . $hmd_options['hmd_designer']   . $close_tag;
-		if (isset($hmd_options['hmd_distribute']) && $hmd_options['hmd_distribute'] !== '') $hmd_output .= "\t\t" .'<meta name="distribution" content="'   . $hmd_options['hmd_distribute'] . $close_tag;
-		if (isset($hmd_options['hmd_language'])   && $hmd_options['hmd_language']   !== '') $hmd_output .= "\t\t" .'<meta name="language" content="'       . $hmd_options['hmd_language']   . $close_tag;
-		if (isset($hmd_options['hmd_publisher'])  && $hmd_options['hmd_publisher']  !== '') $hmd_output .= "\t\t" .'<meta name="publisher" content="'      . $hmd_options['hmd_publisher']  . $close_tag;
-		if (isset($hmd_options['hmd_rating'])     && $hmd_options['hmd_rating']     !== '') $hmd_output .= "\t\t" .'<meta name="rating" content="'         . $hmd_options['hmd_rating']     . $close_tag;
-		if (isset($hmd_options['hmd_resource'])   && $hmd_options['hmd_resource']   !== '') $hmd_output .= "\t\t" .'<meta name="resource-type" content="'  . $hmd_options['hmd_resource']   . $close_tag;
-		if (isset($hmd_options['hmd_revisit'])    && $hmd_options['hmd_revisit']    !== '') $hmd_output .= "\t\t" .'<meta name="revisit-after" content="'  . $hmd_options['hmd_revisit']    . $close_tag;
-		if (isset($hmd_options['hmd_subject'])    && $hmd_options['hmd_subject']    !== '') $hmd_output .= "\t\t" .'<meta name="subject" content="'        . $hmd_options['hmd_subject']    . $close_tag;
-		if (isset($hmd_options['hmd_template'])   && $hmd_options['hmd_template']   !== '') $hmd_output .= "\t\t" .'<meta name="template" content="'       . $hmd_options['hmd_template']   . $close_tag;
-		if (isset($hmd_options['hmd_robots'])     && $hmd_options['hmd_robots']     !== '') $hmd_output .= "\t\t" .'<meta name="robots" content="'         . $hmd_options['hmd_robots']     . $close_tag;
+		$hmd_output .= hmd_primary_tags($head_meta_data_options, $close_tag);
+		
 	}
 	
 	$hmd_output .= hmd_display_custom();
@@ -241,13 +272,14 @@ function hmd_display_content() {
 	
 }
 
-function hmd_custom_shortcode() {
+
+function hmd_custom_shortcode() { // internal use only
 	
-	global $hmd_options;
+	global $head_meta_data_options;
 	
-	if ($hmd_options['hmd_custom'] !== '') {
+	if ($head_meta_data_options['hmd_custom'] !== '') {
 		
-		$get_custom_data = $hmd_options['hmd_custom'];
+		$get_custom_data = $head_meta_data_options['hmd_custom'];
 		
 		$the_custom_data = "\t\t" . str_replace(array('>', '<'), array('&gt;','&lt;'), $get_custom_data);
 		
@@ -258,18 +290,21 @@ function hmd_custom_shortcode() {
 }
 add_shortcode('hmd_custom','hmd_custom_shortcode');
 
-function hmd_custom_content() {
+
+function hmd_filter_shortcodes($content) {
 	
-	global $hmd_options, $post;
+	global $post;
 	
-	if (empty($post)) return;
+	if (empty($post)) return $content;
 	
 	$post_id   = $post->ID;
 	$author_id = $post->post_author;
 	
-	$custom = isset($hmd_options['hmd_custom']) ? $hmd_options['hmd_custom'] : '';
+	$format  = apply_filters('hmd_date_format', 'Y-m-d');
+	$tagline = get_bloginfo('description');
+	$title   = get_bloginfo('name');
 	
-	$format = apply_filters('hmd_date_format', 'Y-m-d');
+	//
 	
 	if (is_singular()) {
 		
@@ -282,14 +317,16 @@ function hmd_custom_content() {
 		
 	} else {
 		
-		$post_excerpt = get_bloginfo('description');
+		$post_excerpt = $tagline;
 		$post_date    = hmd_latest_post_date($format);
-		$post_author  = get_bloginfo('name');
-		$post_title   = get_bloginfo('description');
+		$post_author  = $title;
+		$post_title   = $tagline;
 		$post_cats    = get_the_terms($post_id, 'category');
 		$post_tags    = get_the_terms($post_id, 'post_tag');
 		
 	}
+	
+	//
 	
 	if ($post_excerpt && !is_wp_error($post_excerpt)) {
 		
@@ -299,7 +336,7 @@ function hmd_custom_content() {
 		
 	} else {
 		
-		$post_excerpt = get_bloginfo('description');
+		$post_excerpt = $tagline;
 		
 	}
 	
@@ -321,9 +358,11 @@ function hmd_custom_content() {
 		
 	} else {
 		
-		$post_tags = get_bloginfo('name');
+		$post_tags = $title;
 		
 	}
+	
+	//
 	
 	$patterns = array();
 	$patterns[0] = "/\[hmd_tab\]/";
@@ -334,6 +373,8 @@ function hmd_custom_content() {
 	$patterns[5] = "/\[hmd_post_cats\]/";
 	$patterns[6] = "/\[hmd_post_tags\]/";
 	$patterns[7] = "/\[hmd_year\]/";
+	$patterns[8] = "/\[hmd_site_tagline\]/";
+	$patterns[9] = "/\[hmd_site_title\]/";
 	
 	$replacements = array();
 	$replacements[0] = "\t";
@@ -344,13 +385,29 @@ function hmd_custom_content() {
 	$replacements[5] = $post_cats;
 	$replacements[6] = $post_tags;
 	$replacements[7] = date('Y');
+	$replacements[8] = $tagline;
+	$replacements[9] = $title;
 	
-	$custom = preg_replace($patterns, $replacements, $custom);
+	$content = preg_replace($patterns, $replacements, $content);
+	
+	return $content;
+	
+}
+
+
+function hmd_custom_content() {
+	
+	global $head_meta_data_options;
+	
+	$custom = isset($head_meta_data_options['hmd_custom']) ? $head_meta_data_options['hmd_custom'] : '';
+	
+	$custom = hmd_filter_shortcodes($custom);
 	
 	echo "\t\t" . $custom . "\n";
 	
 }
 add_action('wp_head', 'hmd_custom_content');
+
 
 function hmd_latest_post_date($format) {
 	
@@ -377,19 +434,30 @@ function hmd_latest_post_date($format) {
 	
 }
 
+
 function hmd_plugin_action_links($links, $file) {
-	global $hmd_path;
-	if ($file === $hmd_path && (current_user_can('manage_options'))) {
+	
+	global $head_meta_data_path;
+	
+	if ($file === $head_meta_data_path && (current_user_can('manage_options'))) {
+		
 		$hmd_links = '<a href="'. admin_url('options-general.php?page=head-meta-data') .'">'. esc_html__('Settings', 'head-meta-data') .'</a>';
+		
 		array_unshift($links, $hmd_links);
+		
 	}
+	
 	return $links;
+	
 }
 add_filter ('plugin_action_links', 'hmd_plugin_action_links', 10, 2);
 
+
 function add_hmd_links($links, $file) {
-	global $hmd_path;
-	if ($file === $hmd_path) {
+	
+	global $head_meta_data_path;
+	
+	if ($file === $head_meta_data_path) {
 		
 		$home_href  = 'https://perishablepress.com/head-metadata-plus/';
 		$home_title = esc_attr__('Plugin Homepage', 'head-meta-data');
@@ -404,9 +472,12 @@ function add_hmd_links($links, $file) {
 		$links[] = '<a target="_blank" rel="noopener noreferrer" href="'. $href .'" title="'. $title .'">'. $text .'</a>';
 		
 	}
+	
 	return $links;
+	
 }
 add_filter('plugin_row_meta', 'add_hmd_links', 10, 2);
+
 
 function hmd_footer_text($text) {
 	
@@ -429,6 +500,7 @@ function hmd_footer_text($text) {
 }
 add_filter('admin_footer_text', 'hmd_footer_text', 10, 1);
 
+
 function hmd_get_current_screen_id() {
 	
 	if (!function_exists('get_current_screen')) require_once ABSPATH .'/wp-admin/includes/screen.php';
@@ -441,51 +513,77 @@ function hmd_get_current_screen_id() {
 	
 }
 
+
 function hmd_delete_plugin_options() {
+	
 	delete_option('hmd_options');
+	
 }
-if (isset($hmd_options['default_options']) && $hmd_options['default_options'] == 1) {
-	register_uninstall_hook (__FILE__, 'hmd_delete_plugin_options');
+if (isset($head_meta_data_options['default_options']) && $head_meta_data_options['default_options'] == 1) {
+	
+	register_uninstall_hook(__FILE__, 'hmd_delete_plugin_options');
+	
 }
 
+
 function hmd_add_defaults() {
+	
 	// meta subject
-	$args = array('orderby'=>'name', 'order'=>'ASC');
-	$categories = get_categories($args);
+	
+	$categories = get_categories(array('orderby'=>'name', 'order'=>'ASC'));
 	$num_cats = count($categories);
 	$subjects = '';
+	
 	$i = 0;
-	foreach ($categories as $category) { 
+	
+	foreach ($categories as $category) {
+		
 		$subjects .= $category->name;
-		if (++$i !== $num_cats) {
-			$subjects .= ', ';
-		}
+		
+		if (++$i !== $num_cats) $subjects .= ', ';
+		
 	}
+	
 	// name, description, language
+	
 	$site_name = get_bloginfo('name');
 	$site_desc = get_bloginfo('description');
 	$site_lang = get_bloginfo('language');
+	
 	// template and designer
+	
 	$get_theme = wp_get_theme();
 	$the_theme = $get_theme->Name;
-	$designer  = $get_theme->display('Author', FALSE);;
+	$designer  = $get_theme->display('Author', FALSE);
+	
 	// author name
+	
 	$user_info = get_userdata(1);
+	
 	if ($user_info == true) {
+		
 		$admin_name = $user_info->user_login;
+		
 	} else {
-		$admin_name = 'Perishable';
+		
+		$admin_name = 'Administrator';
+		
 	}
+	
+	//
+	
 	$tmp = get_option('hmd_options');
 	
-	if ((isset($tmp['default_options']) && $tmp['default_options'] == '1') || (!is_array($tmp))) {
+	if ((isset($tmp['default_options']) && $tmp['default_options'] == 1) || (!is_array($tmp))) {
+		
 		$arr = array(
+			
 			'default_options' => 0,
 			'hmd_charset'     => 'utf-8',
 			'hmd_abstract'    => $site_desc,
 			'hmd_author'      => $admin_name,
 			'hmd_classify'    => $subjects,
-			'hmd_copyright'   => 'Copyright ' . $site_name . ' - All rights Reserved.',
+			'hmd_copyright'   => 'Copyright '. $site_name .' - All rights Reserved.',
 			'hmd_designer'    => $designer,
 			'hmd_distribute'  => 'Global',
 			'hmd_language'    => $site_lang,
@@ -499,16 +597,26 @@ function hmd_add_defaults() {
 			'hmd_custom'      => '',
 			'hmd_format'      => 1,
 			'hmd_robots'      => 'index,follow',
+			'hmd_keywords'    => '',
+			'hmd_desc'        => '',
+			
 		);
+		
 		update_option('hmd_options', $arr);
+		
 	}
+	
 }
 register_activation_hook(__FILE__, 'hmd_add_defaults');
 
+
 function hmd_init() {
+	
 	register_setting('hmd_plugin_options', 'hmd_options', 'hmd_validate_options');
+	
 }
-add_action ('admin_init', 'hmd_init');
+add_action('admin_init', 'hmd_init');
+
 
 function hmd_validate_options($input) {
 	
@@ -530,6 +638,8 @@ function hmd_validate_options($input) {
 	$input['hmd_subject']    = esc_attr($input['hmd_subject']);
 	$input['hmd_template']   = esc_attr($input['hmd_template']);
 	$input['hmd_robots']     = esc_attr($input['hmd_robots']);
+	$input['hmd_keywords']   = esc_attr($input['hmd_keywords']);
+	$input['hmd_desc']       = esc_attr($input['hmd_desc']);
 	
 	if (!isset($input['hmd_enable'])) $input['hmd_enable'] = null;
 	$input['hmd_enable'] = ($input['hmd_enable'] == 1 ? 1 : 0);
@@ -575,17 +685,24 @@ function hmd_validate_options($input) {
 	$allowedposttags = $default_allowedposttags;
 
 	return $input;
+	
 }
 
+
 function hmd_add_options_page() {
-	global $hmd_plugin;
+	
+	global $head_meta_data_plugin;
+	
 	// add_options_page($page_title, $menu_title, $capability, $menu_slug, $callback, $position)
-	add_options_page($hmd_plugin, $hmd_plugin, 'manage_options', 'head-meta-data', 'hmd_render_form');
+	add_options_page($head_meta_data_plugin, $head_meta_data_plugin, 'manage_options', 'head-meta-data', 'hmd_render_form');
+	
 }
 add_action ('admin_menu', 'hmd_add_options_page');
 
+
 function hmd_render_form() {
-	global $hmd_plugin, $hmd_options, $hmd_homeurl, $hmd_version; ?>
+	
+	global $head_meta_data_plugin, $head_meta_data_options, $head_meta_data_homeurl, $head_meta_data_version; ?>
 
 	<style type="text/css">
 		#mm-plugin-options .mm-panel-overview {
@@ -627,7 +744,7 @@ function hmd_render_form() {
 		#mm-plugin-options li { margin: 8px 0; list-style-type: disc; }
 		
 		#mm-plugin-options textarea { width: 80%; }
-		#mm-plugin-options input[type=text] { width: 60%; }
+		#mm-plugin-options input[type=text] { width: 70%; }
 		#mm-plugin-options input[type=checkbox] { margin-top: -3px; }
 		#mm-plugin-options .mm-radio-inputs { margin: 5px 0; }
 		#mm-plugin-options .mm-code { 
@@ -675,11 +792,11 @@ function hmd_render_form() {
 	</style>
 
 	<div id="mm-plugin-options" class="wrap">
-		<h1><?php echo $hmd_plugin; ?> <small><?php echo 'v'. $hmd_version; ?></small></h1>
+		<h1><?php echo $head_meta_data_plugin; ?> <small><?php echo 'v'. $head_meta_data_version; ?></small></h1>
 		<div class="mm-panel-toggle"><a href="<?php echo admin_url('options-general.php?page=head-meta-data'); ?>"><?php esc_html_e('Toggle all panels', 'head-meta-data'); ?></a></div>
 
 		<form method="post" action="options.php">
-			<?php $hmd_options = get_option('hmd_options'); settings_fields('hmd_plugin_options'); ?>
+			<?php $head_meta_data_options = get_option('hmd_options'); settings_fields('hmd_plugin_options'); ?>
 
 			<div class="metabox-holder">
 				<div class="meta-box-sortables ui-sortable">
@@ -690,7 +807,7 @@ function hmd_render_form() {
 							<div class="mm-panel-overview">
 								<div class="main">
 									<p>
-										<strong><?php echo $hmd_plugin; ?></strong> <?php esc_html_e('(HMD) adds a custom set of', 'head-meta-data'); ?> 
+										<strong><?php echo $head_meta_data_plugin; ?></strong> <?php esc_html_e('(HMD) adds a custom set of', 'head-meta-data'); ?> 
 										<code>&lt;meta&gt;</code> <?php esc_html_e('tags to the', 'head-meta-data'); ?> 
 										<code>&lt;head&gt;</code> <?php esc_html_e('section of all posts and pages.', 'head-meta-data'); ?>
 									</p>
@@ -724,89 +841,103 @@ function hmd_render_form() {
 							</p>
 							<div class="mm-table-wrap">
 								<table class="widefat mm-table">
+									<colgroup>
+										<col span="1" style="width: 17%;">
+										<col span="1" style="width: 77%;">
+									</colgroup>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_enable]"><?php esc_html_e('Enable tags', 'head-meta-data'); ?></label></th>
-										<td><input type="checkbox" name="hmd_options[hmd_enable]" value="1" <?php if (isset($hmd_options['hmd_enable'])) checked('1', $hmd_options['hmd_enable']); ?>> 
+										<td><input type="checkbox" name="hmd_options[hmd_enable]" value="1" <?php if (isset($head_meta_data_options['hmd_enable'])) checked('1', $head_meta_data_options['hmd_enable']); ?>> 
 										<span><?php esc_html_e('Enable meta tags', 'head-meta-data'); ?></span></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_format]"><?php esc_html_e('HTML format', 'head-meta-data'); ?></label></th>
-										<td><input type="checkbox" name="hmd_options[hmd_format]" value="1" <?php if (isset($hmd_options['hmd_format'])) checked('1', $hmd_options['hmd_format']); ?>> 
+										<td><input type="checkbox" name="hmd_options[hmd_format]" value="1" <?php if (isset($head_meta_data_options['hmd_format'])) checked('1', $head_meta_data_options['hmd_format']); ?>> 
 										<span><?php esc_html_e('Check box for HTML format (default), or leave unchecked for XHTML format', 'head-meta-data'); ?></span></td>
 									</tr>
 									<tr>
-										<th scope="row"><label for="hmd_options[hmd_charset]"><?php esc_html_e('Meta Charset', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_charset]" value="<?php if (isset($hmd_options['hmd_charset'])) echo esc_attr($hmd_options['hmd_charset']); ?>">
+										<th scope="row"><label for="hmd_options[hmd_charset]"><?php esc_html_e('Meta charset', 'head-meta-data'); ?></label></th>
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_charset]" value="<?php if (isset($head_meta_data_options['hmd_charset'])) echo esc_attr($head_meta_data_options['hmd_charset']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Specify the character encoding for your web pages (default: utf-8)', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_abstract]"><?php esc_html_e('Meta abstract', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_abstract]" value="<?php if (isset($hmd_options['hmd_abstract'])) echo esc_attr($hmd_options['hmd_abstract']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_abstract]" value="<?php if (isset($head_meta_data_options['hmd_abstract'])) echo esc_attr($head_meta_data_options['hmd_abstract']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Summarize your site&rsquo;s content in a short sentence', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_author]"><?php esc_html_e('Meta author', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_author]" value="<?php if (isset($hmd_options['hmd_author'])) echo esc_attr($hmd_options['hmd_author']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_author]" value="<?php if (isset($head_meta_data_options['hmd_author'])) echo esc_attr($head_meta_data_options['hmd_author']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate your site&rsquo;s author(s)', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_classify]"><?php esc_html_e('Meta classification', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_classify]" value="<?php if (isset($hmd_options['hmd_classify'])) echo esc_attr($hmd_options['hmd_classify']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_classify]" value="<?php if (isset($head_meta_data_options['hmd_classify'])) echo esc_attr($head_meta_data_options['hmd_classify']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Classify your site, examples: Shopping, Movies, Food', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_copyright]"><?php esc_html_e('Meta copyright', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_copyright]" value="<?php if (isset($hmd_options['hmd_copyright'])) echo esc_attr($hmd_options['hmd_copyright']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_copyright]" value="<?php if (isset($head_meta_data_options['hmd_copyright'])) echo esc_attr($head_meta_data_options['hmd_copyright']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate your site&rsquo;s copyright information', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
+										<th scope="row"><label for="hmd_options[hmd_desc]"><?php esc_html_e('Meta description', 'head-meta-data'); ?></label></th>
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_desc]" value="<?php if (isset($head_meta_data_options['hmd_desc'])) echo esc_attr($head_meta_data_options['hmd_desc']); ?>">
+										<div class="mm-item-caption"><?php esc_html_e('Indicate your site&rsquo;s description', 'head-meta-data'); ?></div></td>
+									</tr>
+									<tr>
 										<th scope="row"><label for="hmd_options[hmd_designer]"><?php esc_html_e('Meta designer', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_designer]" value="<?php if (isset($hmd_options['hmd_designer'])) echo esc_attr($hmd_options['hmd_designer']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_designer]" value="<?php if (isset($head_meta_data_options['hmd_designer'])) echo esc_attr($head_meta_data_options['hmd_designer']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate your site&rsquo;s designer/developer', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_distribute]"><?php esc_html_e('Meta distribution', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_distribute]" value="<?php if (isset($hmd_options['hmd_distribute'])) echo esc_attr($hmd_options['hmd_distribute']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_distribute]" value="<?php if (isset($head_meta_data_options['hmd_distribute'])) echo esc_attr($head_meta_data_options['hmd_distribute']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate your site&rsquo;s distribution level, examples: Global, Regional, Local', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
+										<th scope="row"><label for="hmd_options[hmd_keywords]"><?php esc_html_e('Meta keywords', 'head-meta-data'); ?></label></th>
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_keywords]" value="<?php if (isset($head_meta_data_options['hmd_keywords'])) echo esc_attr($head_meta_data_options['hmd_keywords']); ?>">
+										<div class="mm-item-caption"><?php esc_html_e('Indicate some keywords for your site', 'head-meta-data'); ?></div></td>
+									</tr>
+									<tr>
 										<th scope="row"><label for="hmd_options[hmd_language]"><?php esc_html_e('Meta language', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_language]" value="<?php if (isset($hmd_options['hmd_language'])) echo esc_attr($hmd_options['hmd_language']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_language]" value="<?php if (isset($head_meta_data_options['hmd_language'])) echo esc_attr($head_meta_data_options['hmd_language']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate your site&rsquo;s primary language, examples: EN-US, EN, FR', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_publisher]"><?php esc_html_e('Meta publisher', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_publisher]" value="<?php if (isset($hmd_options['hmd_publisher'])) echo esc_attr($hmd_options['hmd_publisher']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_publisher]" value="<?php if (isset($head_meta_data_options['hmd_publisher'])) echo esc_attr($head_meta_data_options['hmd_publisher']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate your site&rsquo;s publisher', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_rating]"><?php esc_html_e('Meta rating', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_rating]" value="<?php if (isset($hmd_options['hmd_rating'])) echo esc_attr($hmd_options['hmd_rating']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_rating]" value="<?php if (isset($head_meta_data_options['hmd_rating'])) echo esc_attr($head_meta_data_options['hmd_rating']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate the rating of your site&rsquo;s content, examples: General, Mature, Restricted', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_resource]"><?php esc_html_e('Meta resource-type', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_resource]" value="<?php if (isset($hmd_options['hmd_resource'])) echo esc_attr($hmd_options['hmd_resource']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_resource]" value="<?php if (isset($head_meta_data_options['hmd_resource'])) echo esc_attr($head_meta_data_options['hmd_resource']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate your site&rsquo;s primary resource type, examples: Document', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_revisit]"><?php esc_html_e('Meta revisit-after', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_revisit]" value="<?php if (isset($hmd_options['hmd_revisit'])) echo esc_attr($hmd_options['hmd_revisit']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_revisit]" value="<?php if (isset($head_meta_data_options['hmd_revisit'])) echo esc_attr($head_meta_data_options['hmd_revisit']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Frequency (in days) for search engines to revisit your site for re-indexing, examples: 1, 2, 3', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_subject]"><?php esc_html_e('Meta subject', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_subject]" value="<?php if (isset($hmd_options['hmd_subject'])) echo esc_attr($hmd_options['hmd_subject']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_subject]" value="<?php if (isset($head_meta_data_options['hmd_subject'])) echo esc_attr($head_meta_data_options['hmd_subject']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate your site&rsquo;s primary subject(s), examples: Photography, Sports, Pancakes', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_template]"><?php esc_html_e('Meta template', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_template]" value="<?php if (isset($hmd_options['hmd_template'])) echo esc_attr($hmd_options['hmd_template']); ?>">
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_template]" value="<?php if (isset($head_meta_data_options['hmd_template'])) echo esc_attr($head_meta_data_options['hmd_template']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate any template used by your site, example: Awesome WordPress Theme', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
-										<th scope="row"><label for="hmd_options[hmd_robots]"><?php esc_html_e('Meta Robots', 'head-meta-data'); ?></label></th>
-										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_robots]" value="<?php if (isset($hmd_options['hmd_robots'])) echo esc_attr($hmd_options['hmd_robots']); ?>">
+										<th scope="row"><label for="hmd_options[hmd_robots]"><?php esc_html_e('Meta robots', 'head-meta-data'); ?></label></th>
+										<td><input type="text" size="50" maxlength="200" name="hmd_options[hmd_robots]" value="<?php if (isset($head_meta_data_options['hmd_robots'])) echo esc_attr($head_meta_data_options['hmd_robots']); ?>">
 										<div class="mm-item-caption"><?php esc_html_e('Indicate any robots directives for your site, example: index,follow', 'head-meta-data'); ?></div></td>
 									</tr>
 									<tr>
@@ -825,20 +956,26 @@ function hmd_render_form() {
 							<h3><?php esc_html_e('Custom Tags', 'head-meta-data'); ?></h3>
 							<p>
 								<?php esc_html_e('Here you may define any custom tags or markup that should be included in the head section of your pages. You also can add custom tags to specific posts and pages. Check the', 'head-meta-data'); ?> 
-								<a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/plugins/head-meta-data/#installation"><?php esc_html_e('Installation docs', 'head-meta-data'); ?></a> <?php esc_html_e('(under &ldquo;Custom meta tags&rdquo;) for more details.', 'head-meta-data'); ?>
+								<a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/plugins/head-meta-data/#installation"><?php esc_html_e('Installation docs', 'head-meta-data'); ?></a> 
+								<?php esc_html_e('(under &ldquo;Custom meta tags&rdquo;) for more details about this setting and the following shortcodes.', 'head-meta-data'); ?>
 							</p>
 							<p>
-								<?php esc_html_e('In the next setting, you can include any of the following shortcodes to display dynamic information:', 'head-meta-data'); ?> 
+								<?php esc_html_e('You may include shortcodes to display dynamic information:', 'head-meta-data'); ?> 
 								<span class="mm-code">[hmd_post_excerpt]</span>, <span class="mm-code">[hmd_post_date]</span>, <span class="mm-code">[hmd_post_author]</span>, <span class="mm-code">[hmd_post_title]</span>, 
-								<span class="mm-code">[hmd_post_cats]</span>, <span class="mm-code">[hmd_post_tags]</span>, <span class="mm-code">[hmd_year]</span>, <span class="mm-code">[hmd_tab]</span> = tab/space.
+								<span class="mm-code">[hmd_post_cats]</span>, <span class="mm-code">[hmd_post_tags]</span>, <span class="mm-code">[hmd_site_tagline]</span>, <span class="mm-code">[hmd_site_title]</span>, 
+								<span class="mm-code">[hmd_year]</span>, <span class="mm-code">[hmd_tab]</span>
 							</p>
-							<p><?php esc_html_e('Here is an example of how to add a custom meta tag:', 'head-meta-data'); ?> <code>&lt;meta name="example" content="custom: [hmd_post_date]"&gt;</code></p>
+							<p><?php esc_html_e('Example meta tag:', 'head-meta-data'); ?> <code>&lt;meta name="example" content="custom: [hmd_post_date]"&gt;</code></p>
 							<div class="mm-table-wrap">
 								<table class="widefat mm-table">
+									<colgroup>
+										<col span="1" style="width: 17%;">
+										<col span="1" style="width: 77%;">
+									</colgroup>
 									<tr>
 										<th scope="row"><label for="hmd_options[hmd_custom]"><?php esc_html_e('Custom Tags', 'head-meta-data'); ?></label></th>
 										<td>
-											<textarea class="large-text code" type="textarea" rows="7" cols="55" name="hmd_options[hmd_custom]"><?php if (isset($hmd_options['hmd_custom'])) echo esc_textarea($hmd_options['hmd_custom']); ?></textarea>
+											<textarea class="large-text code" type="textarea" rows="7" cols="55" name="hmd_options[hmd_custom]"><?php if (isset($head_meta_data_options['hmd_custom'])) echo esc_textarea($head_meta_data_options['hmd_custom']); ?></textarea>
 											<div class="mm-item-caption">
 												<?php esc_html_e('Optional tags for the', 'head-meta-data'); ?> <code>&lt;head&gt;</code> 
 												<?php esc_html_e('section (leave blank to disable). For way more', 'head-meta-data'); ?> 
@@ -905,7 +1042,7 @@ function hmd_render_form() {
 						<h2><?php esc_html_e('Restore Defaults', 'head-meta-data'); ?></h2>
 						<div class="toggle default-hidden">
 							<p>
-								<input name="hmd_options[default_options]" type="checkbox" value="1" id="mm_restore_defaults" <?php if (isset($hmd_options['default_options'])) { checked('1', $hmd_options['default_options']); } ?>> 
+								<input name="hmd_options[default_options]" type="checkbox" value="1" id="mm_restore_defaults" <?php if (isset($head_meta_data_options['default_options'])) { checked('1', $head_meta_data_options['default_options']); } ?>> 
 								<?php esc_html_e('Restore default options upon plugin deactivation/reactivation.', 'head-meta-data'); ?>
 							</p>
 							<p>
@@ -929,7 +1066,7 @@ function hmd_render_form() {
 			</div>
 			
 			<div class="mm-credit-info">
-				<a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url($hmd_homeurl); ?>" title="<?php esc_attr_e('Plugin Homepage', 'head-meta-data'); ?>"><?php echo esc_html($hmd_plugin); ?></a> <?php esc_html_e('by', 'head-meta-data'); ?> 
+				<a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url($head_meta_data_homeurl); ?>" title="<?php esc_attr_e('Plugin Homepage', 'head-meta-data'); ?>"><?php echo esc_html($head_meta_data_plugin); ?></a> <?php esc_html_e('by', 'head-meta-data'); ?> 
 				<a target="_blank" rel="noopener noreferrer" href="https://x.com/perishable" title="<?php esc_attr_e('Jeff Starr on X (Twitter)', 'head-meta-data'); ?>">Jeff Starr</a> @ 
 				<a target="_blank" rel="noopener noreferrer" href="https://monzillamedia.com/" title="<?php esc_attr_e('Obsessive Web Design &amp; Development', 'head-meta-data'); ?>">Monzilla Media</a>
 			</div>
@@ -974,6 +1111,7 @@ function hmd_render_form() {
 
 <?php }
 
+
 function hmd_admin_notice() {
 	
 	if (hmd_get_current_screen_id() === 'settings_page_head-meta-data') {
@@ -984,12 +1122,9 @@ function hmd_admin_notice() {
 			
 			<div class="notice notice-success notice-lh">
 				<p>
-					<strong><?php esc_html_e('Fall Sale!', 'head-meta-data'); ?></strong> 
-					<?php esc_html_e('Take 25% OFF any of our', 'head-meta-data'); ?> 
-					<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'head-meta-data'); ?></a> 
-					<?php esc_html_e('and', 'head-meta-data'); ?> 
-					<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/"><?php esc_html_e('books', 'head-meta-data'); ?></a>. 
-					<?php esc_html_e('Apply code', 'head-meta-data'); ?> <code>FALL2025</code> <?php esc_html_e('at checkout. Sale ends 1/11/2026.', 'head-meta-data'); ?> 
+					<strong><?php esc_html_e('🤖 SAVE 30% on Head Meta Pro!', 'head-meta-data'); ?></strong> 
+					<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/head-meta-pro/"><?php esc_html_e('Dial in perfect meta tags for each page view', 'head-meta-data'); ?></a>. 
+					<?php esc_html_e('Apply code', 'head-meta-data'); ?> <code>HEADMETAPRO</code> <?php esc_html_e('at checkout. Sale ends 3/28/2026.', 'head-meta-data'); ?> 
 					<?php echo hmd_dismiss_notice_link(); ?>
 				</p>
 			</div>
@@ -1003,6 +1138,7 @@ function hmd_admin_notice() {
 }
 add_action('admin_notices', 'hmd_admin_notice');
 
+
 function hmd_dismiss_notice_activate() {
 	
 	delete_option('head-meta-data-dismiss-notice');
@@ -1010,11 +1146,12 @@ function hmd_dismiss_notice_activate() {
 }
 register_activation_hook(__FILE__, 'hmd_dismiss_notice_activate');
 
+
 function hmd_dismiss_notice_version() {
 	
-	global $hmd_wp_vers;
+	global $head_meta_data_version_wp;
 	
-	$version_current = $hmd_wp_vers;
+	$version_current = $head_meta_data_version_wp;
 	
 	$version_previous = get_option('head-meta-data-dismiss-notice');
 	
@@ -1029,6 +1166,7 @@ function hmd_dismiss_notice_version() {
 }
 add_action('admin_init', 'hmd_dismiss_notice_version');
 
+
 function hmd_dismiss_notice_check() {
 	
 	$check = get_option('head-meta-data-dismiss-notice');
@@ -1037,15 +1175,16 @@ function hmd_dismiss_notice_check() {
 	
 }
 
+
 function hmd_dismiss_notice_save() {
 	
 	if (isset($_GET['dismiss-notice-verify']) && wp_verify_nonce($_GET['dismiss-notice-verify'], 'hmd_dismiss_notice')) {
 		
 		if (!current_user_can('manage_options')) exit;
 		
-		global $hmd_wp_vers;
+		global $head_meta_data_version_wp;
 		
-		$result = update_option('head-meta-data-dismiss-notice', $hmd_wp_vers, false);
+		$result = update_option('head-meta-data-dismiss-notice', $head_meta_data_version_wp, false);
 		
 		$result = $result ? 'true' : 'false';
 		
@@ -1060,6 +1199,7 @@ function hmd_dismiss_notice_save() {
 }
 add_action('admin_init', 'hmd_dismiss_notice_save');
 
+
 function hmd_dismiss_notice_link() {
 	
 	$nonce = wp_create_nonce('hmd_dismiss_notice');
@@ -1072,9 +1212,10 @@ function hmd_dismiss_notice_link() {
 	
 }
 
+
 function hmd_check_date_expired() {
 	
-	$expires = apply_filters('hmd_check_date_expired', '2026-01-11');
+	$expires = apply_filters('hmd_check_date_expired', '2026-03-28');
 	
 	return (new DateTime() > new DateTime($expires)) ? true : false;
 	
