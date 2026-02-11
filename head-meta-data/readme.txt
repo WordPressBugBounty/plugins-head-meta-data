@@ -32,7 +32,7 @@ Head Meta Data (HMD) improves the definition and semantic quality of your websit
 
 ### 🤖 Default Meta Tags ###
 
-Display any set of custom meta tags for your site:
+Customize the perfect set of meta tags for your site. For example:
 
 	<head>
 		
@@ -66,7 +66,7 @@ Use shortcodes to dynamically output SEO meta tags:
 	<title>[hmd_post_title] | My Awesome Website</title>
 	<meta name="description" content="[hmd_post_excerpt]">
 
-This outputs dynamic titles and descriptions, useful for SEO. You also can add custom meta tags and markup on specific posts and pages. Check out the [Installation tab](https://wordpress.org/plugins/head-meta-data/#installation) for more information.
+This outputs dynamic titles and descriptions, useful for SEO. You also can add unique meta tags and markup on specific posts and pages. Check out the [Installation tab](https://wordpress.org/plugins/head-meta-data/#installation) for more information.
 
 > ✨ Help bots understand your content better
 
@@ -105,7 +105,7 @@ Shortcodes enable you to include dynamic bits of information in your meta tags. 
 	[hmd_year]          Outputs current year
 	[hmd_tab]           Outputs tab space to tag markup
 
-So you can display your own set of customized meta tags exactly as desired. Visit the [Installation tab](https://wordpress.org/plugins/head-meta-data/#installation) for more information.
+So you can display your own set of custom meta tags exactly as desired. [Learn more &raquo;](https://wordpress.org/plugins/head-meta-data/#installation)
 
 
 ### 🤖 Pro Features ###
@@ -187,7 +187,7 @@ Shortcodes enable you to include dynamic bits of information in your meta tags. 
 	[hmd_year]          Outputs current year
 	[hmd_tab]           Outputs tab space to tag markup
 
-You can include any of these shortcodes in the "Custom Tags" setting, and the displayed information will reflect the current post being viewed. On non-single page views, like the homepage, archives, and search results, the shortcodes display general information about the site:
+You can include any of these shortcodes in the "Custom Tags" setting, and the displayed information will reflect the current post being viewed. On non-single page views, like the homepage, archives, and search results, the shortcodes display general information:
 
 	Non-single views
 	
@@ -239,7 +239,7 @@ For example, we could add the following custom `<link>` tag to any post:
 
 `<link rel="icon" type="image/png" href="/android.png" sizes="192x192">`
 
-After saving changes that exact code will be included in the post's &lt;head&gt; section.
+After saving changes that exact code will be included in the post's `<head>` section.
 
 You can also use shortcodes in custom meta tags, for example:
 
@@ -250,13 +250,15 @@ That will output the post excerpt on single post views, and the site description
 
 __Tip:__ You can include tab spaces in the custom field value, for example:
 
-`		<link rel="icon" type="image/png" href="/android.png" sizes="192x192">`
+`		<meta name="description" content="[hmd_post_excerpt]">`
 
 Useful for indenting code to align with other meta tags ;)
 
-__Tip:__ By default, any custom tags are displayed _after_ the default meta tags. To disable the default meta tags on any post, add a new custom field with the name `hmd_disable_default`. Give it a value of `1`. Save changes and done.
+__Tip:__ By default, any custom tags are displayed _after_ the default meta tags. 
 
-> ✨ __Note:__ The [Pro version](https://plugin-planet.com/head-meta-pro/) provides a [Meta Tags Box](https://plugin-planet.com/wp/wp-content/themes/planet/img/plugins/hmp/hmp-settings-meta-gut.png) UI for adding tags to individual posts and pages
+__Tip:__ To disable all of the default meta tags on any post, add a new custom field with the name `hmd_disable_default`. Give it a value of `1`. Save changes and done.
+
+> ✨ __Note:__ The [Pro version](https://plugin-planet.com/head-meta-pro/) provides a [Meta Tags Box](https://plugin-planet.com/wp/wp-content/themes/planet/img/plugins/hmp/hmp-settings-meta-gut.png) for adding tags to posts and pages
 
 
 ### 🤖 Upgrades ###
@@ -304,7 +306,7 @@ To ask a question, suggest a feature, or provide feedback, [contact me directly]
 
 If you like Head Meta Data, please take a moment to [give a 5-star rating](https://wordpress.org/support/plugin/head-meta-data/reviews/?rate=5#new-post). It helps to keep development and support going strong. Thank you!
 
-> 🤖 Get [Head Meta Pro](https://plugin-planet.com/head-meta-pro/) to dial in perfect meta tags for each page view, social media tags, and more.
+> 🤖 Get [Head Meta Pro](https://plugin-planet.com/head-meta-pro/) to dial in perfect tags for each page view, social media, and more.
 
 
 **20260209**
